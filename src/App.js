@@ -1,50 +1,50 @@
-import React, { Component } from "react"
-import logo from "./logo.svg"
-import "./App.css"
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { Button, Typography, Container } from "@mui/material";
+import Dashboard from "./Dashboard";  // ✅ Import the separate Dashboard file
 
-class LambdaDemo extends Component {
-  constructor(props) {
-    super(props)
-    this.state = { loading: false, msg: null }
-  }
+const WelcomePage = () => {
+  const navigate = useNavigate();
 
-  handleClick = api => e => {
-    e.preventDefault()
+  return (
+    <Container
+      style={{
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        height: "100vh",
+        backgroundColor: "#000",
+        color: "white",
+      }}
+    >
+      <Typography variant="h2" style={{ fontWeight: "bold", marginBottom: "20px" }}>
+        RSS Sentiment Analysis Dashboard
+      </Typography>
+      <Typography variant="body1" style={{ maxWidth: "600px", margin: "0 auto 30px auto", fontSize: "18px" }}>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin nec lorem eget nisl tincidunt fermentum.
+      </Typography>
+      <Button
+        variant="contained"
+        style={{ backgroundColor: "white", color: "black", fontSize: "18px", padding: "10px 30px" }}
+        onClick={() => navigate("/dashboard")}
+      >
+        Explore →
+      </Button>
+    </Container>
+  );
+};
 
-    this.setState({ loading: true })
-    fetch("/.netlify/functions/" + api)
-      .then(response => response.json())
-      .then(json => this.setState({ loading: false, msg: json.msg }))
-  }
 
-  render() {
-    const { loading, msg } = this.state
-
-    return (
-      <p>
-        <button onClick={this.handleClick("hello")}>{loading ? "Loading..." : "Call Lambda"}</button>
-        <button onClick={this.handleClick("async-dadjoke")}>{loading ? "Loading..." : "Call Async Lambda"}</button>
-        <br />
-        <span>{msg}</span>
-      </p>
-    )
-  }
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<WelcomePage />} />
+        <Route path="/dashboard/*" element={<Dashboard />} />  {/* ✅ Uses the separate Dashboard component */}
+      </Routes>
+    </Router>
+  );
 }
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <LambdaDemo />
-        </header>
-      </div>
-    )
-  }
-}
-
-export default App
+export default App;
